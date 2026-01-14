@@ -45,6 +45,16 @@ response.end();
     })
 }
 
+function tennisShop(response) {
+
+    fs.readFile('./img/tennisShop.png', function (err, data){
+
+    response.writeHead(200, { 'Content-Type': 'text/html' }); //헤더 설정
+    response.write(data); //본문 설정
+    response.end(); //응답 종료
+})
+}
+
 function redRacket(response) {
 
     fs.readFile('./TennisShop/img/redRacket.png', function (err, data){
@@ -100,7 +110,7 @@ function css(response) {
 }
 
 function tennisShopCss(response) {
-    fs.readFile('./tennisShopMain.css', function (err, data) {
+    fs.readFile('./TennisShop/tennisShopMain.css', function (err, data) {
         if (err) {
             response.writeHead(404);
             response.end('CSS file not found');
@@ -116,15 +126,16 @@ let handle = {}; // key:value 쌍으로 이루어진 변수 상자, key가 이�
 
 handle['/'] = main;
 handle['/main.css'] = css;
+handle['/img/tennisShop.png'] = tennisShop;
 
 handle['/TennisShop/order'] = order;
 handle['/TennisShop/orderlist.html'] = orderlist;
 handle['/TennisShop/tennisShopMain.html'] = tennisShopMain;
-handle['/tennisShop.css'] = tennisShopCss;
+handle['/TennisShop/tennisShopMain.css'] = tennisShopCss;
 
 /* image directory */
-handle['/img/redRacket.png'] = redRacket;
-handle['/img/blueRacket.png'] = blueRacket;
-handle['/img/blackRacket.png'] = blackRacket;
+handle['/TennisShop/img/redRacket.png'] = redRacket;
+handle['/TennisShop/img/blueRacket.png'] = blueRacket;
+handle['/TennisShop/img/blackRacket.png'] = blackRacket;
 
 exports.handle = handle;
