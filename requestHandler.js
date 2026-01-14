@@ -3,7 +3,18 @@ const main_view = fs.readFileSync('./main.html');
 const tennisShopMain_view = fs.readFileSync('./TennisShop/tennisShopMain.html');
 const orderlist_view = fs.readFileSync('./TennisShop/orderlist.html');
 
+const database = require('./database/database.js');
 const mariadb = require('./database/connect/mariadb.js');
+
+async function tennisGetData(productId, table, column) {
+    try {
+        const result = await database.executeQuery('SELECT ' + column + ' FROM ' + table + ' WHERE productId = ' + productId);
+        console.log('Product Info:', result);
+        return result;
+    } catch (error) {
+        console.error('Error fetching product info:', error);
+    }
+}
 
 function main(response) {
     console.log('main');
@@ -15,17 +26,17 @@ function main(response) {
 
 function tennisShopMain(response) {
     console.log('tennisShopMain');
-    
+
     mariadb.query("SELECT * FROM product", function (err, rows) {
         console.log(rows);
     })
-    
-    response.writeHead(200, { 'Content-Type': 'text/html' }); //헤더 설정
-    response.write(tennisShopMain_view); //본문 설정
-    response.end(); //응답 종료
+
+    response.writeHead(200, { 'Content-Type': 'text/html' });
+    response.write(tennisShopMain_view);
+    response.end();
 }
 
-function orderlist(response){
+function orderlist(response) {
     console.log('orderlist');
 
     response.writeHead(200, { 'Content-Type': 'text/html' });
@@ -35,65 +46,89 @@ function orderlist(response){
 
         rows.forEach(element => {
             response.write("<tr>"
-                + "<td>" + element.productId + "</td>"
-                + "<td>" + element.orderDate + "</td>"
+                + "<td>" + element.Product + "</td>"
+                + "<td>" + element.Description + "</td>"
+                + "<td>" + element.Price + "</td>"
+                + "<td>" + element.OrderDate + "</td>"
                 + "</tr>");
-});
+        });
 
-response.write("</table>");
-response.end();
+        response.write("</table>");
+        response.end();
     })
 }
 
 function tennisShop(response) {
 
-    fs.readFile('./img/tennisShop.png', function (err, data){
+    fs.readFile('./img/tennisShop.png', function (err, data) {
 
-    response.writeHead(200, { 'Content-Type': 'text/html' }); //헤더 설정
-    response.write(data); //본문 설정
-    response.end(); //응답 종료
-})
+        response.writeHead(200, { 'Content-Type': 'text/html' }); //헤더 설정
+        response.write(data); //본문 설정
+        response.end(); //응답 종료
+    })
 }
 
 function redRacket(response) {
 
-    fs.readFile('./TennisShop/img/redRacket.png', function (err, data){
+    fs.readFile('./TennisShop/img/redRacket.png', function (err, data) {
 
-    response.writeHead(200, { 'Content-Type': 'text/html' }); //헤더 설정
-    response.write(data); //본문 설정
-    response.end(); //응답 종료
-})
+        response.writeHead(200, { 'Content-Type': 'text/html' }); //헤더 설정
+        response.write(data); //본문 설정
+        response.end(); //응답 종료
+    })
 }
 
 function blueRacket(response) {
 
-    fs.readFile('./TennisShop/img/blueRacket.png', function (err, data){
+    fs.readFile('./TennisShop/img/blueRacket.png', function (err, data) {
 
-    response.writeHead(200, { 'Content-Type': 'text/html' }); //헤더 설정
-    response.write(data); //본문 설정
-    response.end(); //응답 종료
-})
+        response.writeHead(200, { 'Content-Type': 'text/html' }); //헤더 설정
+        response.write(data); //본문 설정
+        response.end(); //응답 종료
+    })
 }
 
 function blackRacket(response) {
 
-    fs.readFile('./TennisShop/img/blackRacket.png', function (err, data){
+    fs.readFile('./TennisShop/img/blackRacket.png', function (err, data) {
 
-    response.writeHead(200, { 'Content-Type': 'text/html' }); //헤더 설정
-    response.write(data); //본문 설정
-    response.end(); //응답 종료
-})
+        response.writeHead(200, { 'Content-Type': 'text/html' }); //헤더 설정
+        response.write(data); //본문 설정
+        response.end(); //응답 종료
+    })
 }
 
-function order(response, productId) {
+async function order(response, productId) {
     response.writeHead(200, { 'Content-Type': 'text/html' });
 
-    mariadb.query("INSERT INTO orderlist VALUES(" + productId + ", '" + new Date().toLocaleDateString() + "');", function (err, rows) {
-        console.log(rows);
-    })
+    try {
+        let productNameResult = await tennisGetData(productId, 'productInfo', 'productName');
+        let descriptionResult = await tennisGetData(productId, 'productInfo', 'description');
+        let priceResult = await tennisGetData(productId, 'productInfo', 'price');
 
-    response.write('order page');
-    response.end();
+        let productName = await productNameResult[0].productName;
+        let description = await descriptionResult[0].description;
+        let price = await priceResult[0].price;
+
+        console.log('Ordering Product:', productName, description, price);
+
+        mariadb.query(
+            "INSERT INTO orderlist VALUES('" + productName + "', '" + description + "', " + price + ", '" + new Date().toLocaleDateString() + "');", function (err, rows) {
+                if (err) {
+                    console.error('Database insert error:', err);
+                } else {
+                    console.log('Insert successful:', rows);
+                }
+            }
+        );
+
+        response.write('order page');
+        response.end();
+    } catch (error) {
+        console.error('Error in order function:', error);
+        response.write('Error processing order');
+        response.end();
+    }
 }
 
 function css(response) {

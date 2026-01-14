@@ -10,7 +10,6 @@ function start(route, handle) {
             response.writeHead(200, { 'Content-Type': 'img/x-icon' }); //헤더 설정
             return response.end(); //응답 종료
         }
-        
         route(pathname, handle, response, queryData.productId);
     }
 
