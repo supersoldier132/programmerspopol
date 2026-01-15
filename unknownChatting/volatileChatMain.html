@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <metadata charset="UTF-8">
+        <title>Volatile Chatting</title>
+        <link rel="stylesheet" href="volatileChatMain.css">
+</head>
+
+<body>
+    <h1>휘발성 채팅방에 오신것을 환영합니다.</h1>
+    <p>이 곳에서의 채팅은 언젠가 사라집니다.</p>
+    <p>증거 은닉 쌉가능!!</p>
+
+    <div>
+        <table class="table" style="border: 2px solid black;"> <!-- 열 제목 -->
+            <th> 글쓴이 </th>
+            <th>-----</th>
+            <th> 내용</th>
+            <th style="padding-left:300px;">시간</th>
+        </table>
+    </div>
+
+    <div class = "chatting">
+        <input id="textBox" type="text" placeholder="내용을 입력하세요" style="width: 500px; height: 30px;">
+        <input id="button" type="button" value="전송" style="height: 34px;">
+    </div>
+
+    <script>
+        document.getElementById("textBox").addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                console.log("Enter key pressed");
+                event.preventDefault();
+                document.getElementById("button").click();
+            }
+        });
+        
+        const btn = document.getElementById("button");
+        
+        btn.addEventListener("click", function () {
+
+            const table = document.querySelector("table");
+
+            const content = textBox.value.trim();
+
+            if (content !== "") {
+                const table = document.getElementsByClassName("table");
+                const newItem = table.insertRow(-1);
+
+                newItem.insertCell(0).innerText = "몰라";
+                newItem.insertCell(1).innerText = "-----";
+                newItem.insertCell(2).innerText = content;
+                const time = newTiem(3);
+                const nowTime = new Data();
+                cellTime.innerText = now.toLocaleTimeString();
+
+            }
+            document.getElementById("textBox").value = "";
+        });
+
+    </script>
+
+
+</body>
+
+</html>

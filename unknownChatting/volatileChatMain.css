@@ -1,0 +1,36 @@
+h1 {
+    text-align:center;
+    margin-bottom : 50px;
+}
+
+p {
+    text-align:center;
+    margin-bottom : 30px;
+}
+
+div {
+    text-align : center;
+}
+
+table {
+    margin-left: 50px;
+}
+
+.chatting {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+}
+
+#textBox {
+    flex: 1;
+    height: 30px;
+    margin-right: 0px;
+}
+
+#button {
+    width: 100px;
+    height: 40px;
+}
