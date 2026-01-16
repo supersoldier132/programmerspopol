@@ -2,6 +2,9 @@ const fs = require('fs');  //FileSync
 const main_view = fs.readFileSync('./main.html');
 const tennisShopMain_view = fs.readFileSync('./TennisShop/tennisShopMain.html');
 const orderlist_view = fs.readFileSync('./TennisShop/orderlist.html');
+const chat_view = fs.readFileSync('./unknownChatting/chatMain.html');
+const volatilityChat_view = fs.readFileSync('./unknownChatting/volatileChatMain.html');
+const foreverChat_view = fs.readFileSync('./unknownChatting/foreverChatMain.html');
 
 const database = require('./database/database.js');
 const mariadb = require('./database/connect/mariadb.js');
@@ -33,6 +36,42 @@ function tennisShopMain(response) {
 
     response.writeHead(200, { 'Content-Type': 'text/html' });
     response.write(tennisShopMain_view);
+    response.end();
+}
+
+function foreverChatMain(response) {
+    console.log('foreverChatMain');
+
+    mariadb.query("SELECT * FROM product", function (err, rows) {
+        console.log(rows);
+    })
+
+    response.writeHead(200, { 'Content-Type': 'text/html' });
+    response.write(foreverChat_view);
+    response.end();
+}
+
+function volatileChatMain(response) {
+    console.log('volatileChatMain');
+
+    mariadb.query("SELECT * FROM product", function (err, rows) {
+        console.log(rows);
+    })
+
+    response.writeHead(200, { 'Content-Type': 'text/html' });
+    response.write(volatilityChat_view);
+    response.end();
+}
+
+function chatMain(response) {
+    console.log('chatMain');
+
+    mariadb.query("SELECT * FROM product", function (err, rows) {
+        console.log(rows);
+    })
+
+    response.writeHead(200, { 'Content-Type': 'text/html' });
+    response.write(chat_view);
     response.end();
 }
 
@@ -91,6 +130,26 @@ function blueRacket(response) {
 function blackRacket(response) {
 
     fs.readFile('./TennisShop/img/blackRacket.png', function (err, data) {
+
+        response.writeHead(200, { 'Content-Type': 'text/html' }); //헤더 설정
+        response.write(data); //본문 설정
+        response.end(); //응답 종료
+    })
+}
+
+function volatility(response) {
+
+    fs.readFile('./unknownChatting/img/volatility.png', function (err, data) {
+
+        response.writeHead(200, { 'Content-Type': 'text/html' }); //헤더 설정
+        response.write(data); //본문 설정
+        response.end(); //응답 종료
+    })
+}
+
+function forever(response) {
+
+    fs.readFile('./unknownChatting/img/forever.png', function (err, data) {
 
         response.writeHead(200, { 'Content-Type': 'text/html' }); //헤더 설정
         response.write(data); //본문 설정
@@ -168,9 +227,15 @@ handle['/TennisShop/orderlist.html'] = orderlist;
 handle['/TennisShop/tennisShopMain.html'] = tennisShopMain;
 handle['/TennisShop/tennisShopMain.css'] = tennisShopCss;
 
-/* image directory */
 handle['/TennisShop/img/redRacket.png'] = redRacket;
 handle['/TennisShop/img/blueRacket.png'] = blueRacket;
 handle['/TennisShop/img/blackRacket.png'] = blackRacket;
+
+handle['/unknownChatting/chatMain.html'] = chatMain;
+handle['/unknownChatting/volatileChatMain.html'] = volatileChatMain;
+handle['/unknownChatting/foreverChatMain.html'] = foreverChatMain;
+
+handle['/unknownChatting/img/volatility.png'] = volatility;
+handle['/unknownChatting/img/forever.png'] = forever;
 
 exports.handle = handle;

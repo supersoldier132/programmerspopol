@@ -24,3 +24,8 @@ h1{
     height: 100px;
     object-fit: contain;
 }
+
+.list {
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+}
